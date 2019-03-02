@@ -19,7 +19,7 @@ const dataRef = db.collection('data')
  */
 
 const app = express()
-const port = 5000
+const port = 8080
 
 app.use(express.static(path.join(__dirname, '/public')))
 
@@ -40,4 +40,9 @@ app.post('/api/readings/', (req, res) => {
   })
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+const server = app.listen(port, () => {
+  const serverHost = server.address().address
+  const serverPort = server.address().port
+
+  console.log(`Example app listening at http://${serverHost}:${serverPort}`)
+})
