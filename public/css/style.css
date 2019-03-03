@@ -13,6 +13,11 @@ header {
     width: 100%;
     padding: 
 }
+
 header span {
     font-size: 1.5em;
+}
+
+#footChart {
+    background-color: #DEE5e5;
 }

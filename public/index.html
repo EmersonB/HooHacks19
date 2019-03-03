@@ -1,6 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="">
-<script src="/js/Chart.js"></script>
+<script src="Chart.js"></script>
 
 <head>
   <meta charset="utf-8">
@@ -45,6 +45,7 @@
 <script>
   var ctx = document.getElementById("myChart").getContext('2d');
   var myChart = new Chart(ctx, {
+      scaleLineColor: "rgba(0,0,0,0)",
       type: 'line',
       data: {
         labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
@@ -85,51 +86,62 @@
     });
   
   var rightFoot = new Image();
+  rightFoot.src = "footright.png";
+  var leftFoot = new Image();
+  leftFoot.src = "footleft.png"
   var ctx2 = document.getElementById("footChart").getContext("2d");
   var footChart = new Chart(ctx2, {
-    type: 'bubble',
+    type: 'scatter',
     data: {
-      labels: "Africa",
-      datasets: [
-        {
-          label: ["Left Foot"],
-          backgroundColor: "rgba(255,221,50,0.2)",
-          borderColor: "rgba(255,221,50,1)",
-          data: [{
-            x: 21269017,
-            y: 5.245,
-            r: 15
-          }]
-        }, {
-          label: ["Right Foot"],
-          backgroundColor: "rgba(60,186,159,0.2)",
-          borderColor: "rgba(60,186,159,1)",
-          data: [{
-            x: 258702,
-            y: 7.526,
-            r: 10
-          }]
-        }
-      ]
+        datasets: [{
+            label: 'Scatter Dataset',
+            data: [{
+                x: 1,
+                y: 1
+            }],
+            pointRadius: 0,
+            pointHoverRadius: 20,
+            pointHitRadius: 20,
+            pointStyle: rightFoot
+        }]
     },
     options: {
-      title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }, scales: {
-        yAxes: [{ 
-          scaleLabel: {
-            display: true,
-            labelString: "Happiness"
+        legend: {
+          labels: {
+            boxWidth: 0,
+            fontSize: 0.1
           }
-        }],
-        xAxes: [{ 
-          scaleLabel: {
-            display: true,
-            labelString: "GDP (PPP)"
-          }
-        }]
-      }
+        },
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                ticks: {
+                        beginAtZero:true,
+                        min: 0,
+                        stepSize: 1,
+                        max: 2,  
+                        display: false 
+                    },
+                gridLines: {
+                          color: "5C6F68",
+                          lineWidth: 4
+                    } 
+            }],
+            yAxes: [{
+                type: 'linear',
+                ticks: {
+                        beginAtZero:true,
+                        stepSize: 1,
+                        min: 0,
+                        max: 2,
+                        display: false
+                    },
+                gridLines: {
+                          color: "5C6F68",
+                          lineWidth: 4
+                    } 
+            }]
+        }
     }
 });
 </script>
