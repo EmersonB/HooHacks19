@@ -37,7 +37,7 @@ app.post('/api/:name', (req, res) => {
   console.log(req.body)
   const data = req.body
   db.collection(data.status)
-    .doc(moment().unix().toString())
+    .doc(moment().valueOf().toString())
     .set(data)
     .then(ref => {
       res.json({ success: true, ref: ref.id })

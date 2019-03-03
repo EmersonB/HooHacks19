@@ -1,6 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="">
-<script src="Chart.js"></script>
+
 
 <head>
   <meta charset="utf-8">
@@ -16,134 +16,79 @@
   <link rel="stylesheet" href="css/style.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+  <script src="js/Chart.js"></script>
+  <script src="js/chartannotations.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
   <script src="js/scripts.js"></script>
 </head>
+
+
+<!-- <i data-feather="info"></i> -->
 
 <body>
   <header>
     <span>statera</span>
   </header>
-  <div class="grid-container">
-    <div class="balance-container">
 
+  <div id="primary" class="grid-container">
+    <div id="graph-container">
+      <div id="balance-container">
+        <div id="balance-header">
+          <h2>Balance Metric</h2>
+        </div>
+        <div id="balance-body">
+          <canvas id="balance-chart"></canvas>
+        </div>
+      </div>
+      <div id="graph-grid">
+        <div class="graph-info">
+          <div id="mass-container">
+              <canvas id="mass-chart"></canvas>
+          </div>
+          <div id="mass-body">
+              <h3>Center of Mass</h3>
+              <p>The dot is a visual representation of where your center of mass lies in relation 
+                to your feet as you walk. </p>
+          </div>
+        </div>
+        <div class="graph-info">
+          <div id="radar-container">
+            <canvas id="radar-chart"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="snapshot-container">
+    <div id="eval-container">
+      <h1>Evaluation: <span id="eval">Chad</span></h1>
+      
+      <div id="posture">
+        <div id="posture-diagram">
+          <img id="posture-demo" src="img/back.png"/>
+        </div>
+        <div>
+          <h3>Leanings</h3>
+          <ul id="eval-list">
+            <li><label>Right:</label> <span id="right"></span>%</li>
+            <li><label>Left:</label> <span id="left"></span>%</li>
+            <li><label>Forward:</label> <span id="for"></span>%</li>
+            <li><label>Backward:</label> <span id="back"></span>%</li>
+          </ul>
+        </div>
+      </div>
+      
+      <h2>Tips to Improve Posture</h2>
+      <p>Just some cool tips dude.</p>
     </div>
-  </div>
-  <div class="info-container">
-    
-  </div>
-  <div style="height: 50vh; width: 50vw;" class= "myChartdiv">
-  	<canvas id="myChart" style="height: 100%; width: 100%;"></canvas>
-  </div>
-  <div style="height: 50vh; width: 50vw;" class= "footChartdiv">
-    <canvas id="footChart" style="height: 100%; width: 100%;"></canvas>
   </div>
 </body>
-
-<script>
-  var ctx = document.getElementById("myChart").getContext('2d');
-  var myChart = new Chart(ctx, {
-      scaleLineColor: "rgba(0,0,0,0)",
-      type: 'line',
-      data: {
-        labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
-        datasets: [{ 
-            data: [86,114,106,106,107,111,133,221,783,2478],
-            label: "Africa",
-            borderColor: "#3e95cd",
-            fill: false
-          }, { 
-            data: [282,350,411,502,635,809,947,1402,3700,5267],
-            label: "Asia",
-            borderColor: "#8e5ea2",
-            fill: false
-          }, { 
-            data: [168,170,178,190,203,276,408,547,675,734],
-            label: "Europe",
-            borderColor: "#3cba9f",
-            fill: false
-          }, { 
-            data: [40,20,10,16,24,38,74,167,508,784],
-            label: "Latin America",
-            borderColor: "#e8c3b9",
-            fill: false
-          }, {          
-            data: [6,3,2,2,7,26,82,172,312,433],
-            label: "North America",
-            borderColor: "#c45850",
-            fill: false
-          }
-        ]
-      },
-      options: {
-        title: {
-          display: true,
-          text: 'World population per region (in millions)'
-        }
-      }
-    });
-  
-  var rightFoot = new Image();
-  rightFoot.src = "footright.png";
-  var leftFoot = new Image();
-  leftFoot.src = "footleft.png"
-  var ctx2 = document.getElementById("footChart").getContext("2d");
-  var footChart = new Chart(ctx2, {
-    type: 'scatter',
-    data: {
-        datasets: [{
-            label: 'Scatter Dataset',
-            data: [{
-                x: 1,
-                y: 1
-            }],
-            pointRadius: 0,
-            pointHoverRadius: 20,
-            pointHitRadius: 20,
-            pointStyle: rightFoot
-        }]
-    },
-    options: {
-        legend: {
-          labels: {
-            boxWidth: 0,
-            fontSize: 0.1
-          }
-        },
-        scales: {
-            xAxes: [{
-                type: 'linear',
-                ticks: {
-                        beginAtZero:true,
-                        min: 0,
-                        stepSize: 1,
-                        max: 2,  
-                        display: false 
-                    },
-                gridLines: {
-                          color: "5C6F68",
-                          lineWidth: 4
-                    } 
-            }],
-            yAxes: [{
-                type: 'linear',
-                ticks: {
-                        beginAtZero:true,
-                        stepSize: 1,
-                        min: 0,
-                        max: 2,
-                        display: false
-                    },
-                gridLines: {
-                          color: "5C6F68",
-                          lineWidth: 4
-                    } 
-            }]
-        }
-    }
-});
-</script>
-
 </html>
+
+  <!-- <div id="welcome">
+    <div id="welcome-message">
+      <h1>welcome to statera</h1>
+      <p></p>
+      <button>get started</button>
+    </div>
+  </div> -->
