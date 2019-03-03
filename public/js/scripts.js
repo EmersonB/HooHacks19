@@ -1,4 +1,6 @@
-/* eslint-disable comma-spacing */
+const loopInterval = 5000
+const calcWindow = 30
+
 var config = {
   apiKey: 'AIzaSyAGR4ionKdXWPFxJQTUKxBHsJ-5RGiMtFU',
   authDomain: 'stasis-aff23.firebaseapp.com',
@@ -9,6 +11,8 @@ var config = {
 }
 
 firebase.initializeApp(config)
+const db = firebase.firestore()
+const collection = db.collection('feed')
 
 Chart.defaults.global.defaultFontFamily = 'Quicksand'
 Chart.defaults.global.elements.point = {
@@ -19,22 +23,208 @@ Chart.defaults.global.elements.point = {
   hoverBorderWidth: 2
 }
 
+var model
+var firstTime = true
+var balChart
+var comChart
+var radChart
+var rightFoot = new Image()
+rightFoot.src = 'img/rightfoot.png'
+var leftFoot = new Image()
+leftFoot.src = 'img/leftfoot.png'
+
+var order = ['back', 'forward', 'left', 'normal', 'right']
+var rawData = {}
+var timestamps = []
+var endPoint = 0
+var startPoint = 0
+var mlInput = []
+var mlOutput = []
+var aggregatedOutput = [] // sum of count of classes
+var finalCount = [0, 0, 0, 0, 0]
+var radarCount = [0, 0, 0, 0]
+
+var balanceChartLabels = []
+var balanceChartData = []
+
+var coords = [0, 0]
+
 $(document).ready(function () {
   feather.replace()
-  setupBalanceChart()
-  setupCenterOfMassChart()
-  setupRadarChart()
+  start()
 })
+
+async function start () {
+  model = await tf.loadModel('model.json')
+  loop = setInterval(retrieveData, loopInterval)
+  retrieveData()
+}
+
+function retrieveData () {
+  order = ['back', 'forward', 'left', 'normal', 'right']
+  rawData = {}
+  timestamps = []
+  endPoint = 0
+  startPoint = 0
+  mlInput = []
+  mlOutput = []
+  aggregatedOutput = [] // sum of count of classes
+  finalCount = [0, 0, 0, 0, 0]
+
+  balanceChartLabels = []
+  balanceChartData = []
+
+  coords = [0, 0]
+  collection.get().then(snapshot => {
+    rawData = {}
+    snapshot.forEach(doc => {
+      let data = doc.data()
+      rawData[doc.id] = data
+    })
+    processData()
+  })
+}
+
+function processData () {
+  timestamps = Object.keys(rawData)
+  if (timestamps.length >= 3) {
+    endPoint = timestamps.length - 3
+    startPoint = Math.max(endPoint - calcWindow, 0)
+
+    for (var i = startPoint; i <= endPoint; i++) {
+      let one = [rawData[timestamps[i]]['accex'],
+        rawData[timestamps[i]]['accey'],
+        rawData[timestamps[i]]['accez'],
+        rawData[timestamps[i]]['gyrox'],
+        rawData[timestamps[i]]['gyroy'],
+        rawData[timestamps[i]]['gyroz']]
+
+      let two = [rawData[timestamps[i]]['accex'],
+        rawData[timestamps[i]]['accey'],
+        rawData[timestamps[i]]['accez'],
+        rawData[timestamps[i]]['gyrox'],
+        rawData[timestamps[i]]['gyroy'],
+        rawData[timestamps[i]]['gyroz']]
+
+      let three = [rawData[timestamps[i]]['accex'],
+        rawData[timestamps[i]]['accey'],
+        rawData[timestamps[i]]['accez'],
+        rawData[timestamps[i]]['gyrox'],
+        rawData[timestamps[i]]['gyroy'],
+        rawData[timestamps[i]]['gyroz']]
+
+      let combined = one.concat(two, three)
+      mlInput.push(combined)
+    }
+
+    getMlOutput()
+
+    for (var i = 0; i < mlOutput.length; i++) {
+      aggregatedOutput.push(mlOutput[i].indexOf(_.max(mlOutput[i])))
+    }
+
+    balanceChart()
+    centerOfMassChart()
+    radarChart()
+    finalEval()
+
+    if (firstTime) {
+      setupBalanceChart()
+      setupCenterOfMassChart()
+      setupRadarChart()
+      firstTime = false
+      $('#welcome').hide()
+    } else {
+      balChart.options = {
+        ...balChart.options,
+        animation: {
+          duration: 0
+        }
+      }
+      comChart.options = {
+        ...comChart.options,
+        animation: {
+          duration: 0
+        }
+      }
+      radChart.options = {
+        ...radChart.options,
+        animation: {
+          duration: 0
+        }
+      }
+      balChart.data.datasets = [{
+        data: balanceChartData,
+        label: 'Balance Metric',
+        borderColor: '#95D9C3',
+        fill: false
+      }]
+      comChart.data.datasets = [{
+        label: 'Scatter Dataset',
+        data: [{
+          x: 0.5,
+          y: 0
+        }],
+        pointRadius: 0,
+        pointHoverRadius: 20,
+        pointHitRadius: 20,
+        pointStyle: rightFoot
+      },
+      {
+        label: 'Scatter Dataset',
+        data: [{
+          x: -0.5,
+          y: 0
+        }],
+        pointRadius: 0,
+        pointHoverRadius: 20,
+        pointHitRadius: 20,
+        pointStyle: leftFoot
+      },
+      {
+        label: 'Center of Mass',
+        data: [{
+          x: coords[0],
+          y: coords[1]
+        }]
+      }]
+
+      radChart.data.datasets = [{
+        label: 'My First dataset',
+        data: radarCount
+      }]
+
+      balChart.update()
+      comChart.update()
+      radChart.update()
+    }
+  }
+}
+
+function getMlOutput () {
+  // _.forEach(mlInput, val => {
+  //   mlOutput.push(model.predict([val]))
+  // })
+  let tensors = tf.tensor(mlInput)
+  mlOutput = model.predictOnBatch(tensors).arraySync()
+}
+
+function balanceChart () {
+  for (var i = 0; i < endPoint - startPoint; i++) {
+    balanceChartLabels.push(moment(parseFloat(timestamps[i])).format('LTS'))
+    balanceChartData.push(mlOutput[i][3])
+  }
+}
 
 function setupBalanceChart () {
   var ctx = document.getElementById('balance-chart').getContext('2d')
-  var myChart = new Chart(ctx, {
+  balChart = new Chart(ctx, {
     scaleLineColor: 'rgba(0,0,0,0)',
     type: 'line',
     data: {
-      labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+      labels: balanceChartLabels,
       datasets: [{
-        data: [86,114,106,106,107,111,133,221,783,2478],
+        data: balanceChartData,
         label: 'Balance Metric',
         borderColor: '#95D9C3',
         fill: false
@@ -82,13 +272,20 @@ function setupBalanceChart () {
   })
 }
 
+function centerOfMassChart () {
+  for (var i = 0; i < mlOutput.length; i++) {
+    coords[0] += mlOutput[i][4] - mlOutput[i][2]
+    coords[1] += mlOutput[i][1] - mlOutput[i][0]
+  }
+  coords[0] /= mlOutput.length
+  coords[1] /= mlOutput.length
+  coords[0] = Math.max(Math.min(coords[0], 1), -1)
+  coords[1] = Math.max(Math.min(coords[1], 1), -1)
+}
+
 function setupCenterOfMassChart () {
-  var rightFoot = new Image()
-  rightFoot.src = 'img/rightfoot.png'
-  var leftFoot = new Image()
-  leftFoot.src = 'img/leftfoot.png'
   var ctx2 = document.getElementById('mass-chart').getContext('2d')
-  var footChart = new Chart(ctx2, {
+  comChart = new Chart(ctx2, {
     type: 'scatter',
     data: {
       datasets: [{
@@ -112,6 +309,13 @@ function setupCenterOfMassChart () {
         pointHoverRadius: 20,
         pointHitRadius: 20,
         pointStyle: leftFoot
+      },
+      {
+        label: 'Center of Mass',
+        data: [{
+          x: coords[0],
+          y: coords[1]
+        }]
       }]
     },
     options: {
@@ -178,23 +382,25 @@ function setupCenterOfMassChart () {
   })
 }
 
+function radarChart () {
+  for (let i = 0; i < order.length; i++) {
+    finalCount[i] = aggregatedOutput.filter((n) => (n === i)).length
+  }
+  radarCount[0] = finalCount[1]
+  radarCount[1] = finalCount[4]
+  radarCount[2] = finalCount[0]
+  radarCount[3] = finalCount[2]
+}
+
 function setupRadarChart () {
   var ctx = document.getElementById('radar-chart').getContext('2d')
-  var myChart = new Chart(ctx, {
+  radChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['Forward', 'Right', 'Back', 'Left'],
+      labels: ['forward', 'right', 'back', 'left'],
       datasets: [{
         label: 'My First dataset',
-        data: [
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor(),
-          randomScalingFactor()
-        ]
+        data: radarCount
       }]
     },
     options: {
@@ -211,12 +417,24 @@ function setupRadarChart () {
       scale: {
         ticks: {
           beginAtZero: true
+        },
+        pointLabels: {
+          fontSize: 16,
+          fontWeight: 'bold'
         }
       }
     }
   })
 }
 
-function randomScalingFactor () {
-  return Math.round(Math.random() * 100)
+function finalEval () {
+  let total = _.sum(finalCount)
+  let maxLeaning = finalCount.indexOf(_.max(finalCount))
+  $('#eval').text(order[maxLeaning])
+  $('#posture-demo').attr('src', 'img/' + order[maxLeaning] + '.png')
+
+  $('#right').text((finalCount[4] / total).toFixed(2))
+  $('#left').text((finalCount[2] / total).toFixed(2))
+  $('#for').text((finalCount[1] / total).toFixed(2))
+  $('#back').text((finalCount[0] / total).toFixed(2))
 }

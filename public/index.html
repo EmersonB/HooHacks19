@@ -17,7 +17,10 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.3/dist/tf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.js"></script>
   <script src="js/Chart.js"></script>
   <script src="js/chartannotations.js"></script>
   <script src="https://unpkg.com/feather-icons"></script>
@@ -31,6 +34,13 @@
   <header>
     <span>statera</span>
   </header>
+
+  <div id="welcome">
+    <div id="welcome-message">
+      <h1>welcome to statera</h1>
+      <p>loading previous data</p>
+    </div>
+  </div>
 
   <div id="primary" class="grid-container">
     <div id="graph-container">
@@ -69,7 +79,7 @@
       
       <div id="posture">
         <div id="posture-diagram">
-          <img id="posture-demo" src="img/back.png"/>
+          <img id="posture-demo" src="img/normal.png"/>
         </div>
         <div>
           <h3>Leanings</h3>
@@ -82,17 +92,10 @@
         </div>
       </div>
       
-      <h2>Tips to Improve Posture</h2>
-      <p>Just some cool tips dude.</p>
+      <!-- <h2>Tips to Improve Posture</h2>
+      <p>Just some cool tips dude.</p> -->
     </div>
   </div>
 </body>
 </html>
 
-  <!-- <div id="welcome">
-    <div id="welcome-message">
-      <h1>welcome to statera</h1>
-      <p></p>
-      <button>get started</button>
-    </div>
-  </div> -->

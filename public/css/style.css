@@ -41,9 +41,14 @@ header span {
 
 #eval-container {
   background:#9DC5BB80;
-  box-shadow: 0 0 20px #DEE5E5;
+  box-shadow: 0 0 20px #DEE5E5,
+            0 1vh 1vh 0 #607D8B15;
   border-radius: 10px;
   padding: 30px;
+}
+
+#eval-container h1 {
+    font-weight: "bold";
 }
 
 #eval {
@@ -96,7 +101,8 @@ header span {
 #balance-container {
   height: 455px !important;
   padding: 20px;
-  box-shadow: 0 0 20px #DEE5E5A0;
+  box-shadow: 0 0 20px #DEE5E5A0,
+            0 1vh 1vh 0 #607D8B15;
 }
 
 #balance-header {
@@ -112,13 +118,21 @@ header span {
   display: flex;
   justify-content: row;
   box-shadow: 0 0 20px #DEE5E5A0,
-            1vh 1vh 1vh 0 #607D8B44;
+            0 1vh 1vh 0 #607D8B15;
   width: 600px;
 }
 
 #mass-container, #radar-container {
   height: calc(300px - 40px) !important;
   padding: 20px;
+}
+
+#mass-body, #radar-body {
+    padding: 30px 50px 30px 30px;
+}
+
+#mass-body h3, #radar-body h3 {
+    margin-bottom: 20px;
 }
 
 #graph-grid {
@@ -135,7 +149,7 @@ header span {
   background-color: #DEE5e5;
 }
 
-/* #welcome {
+#welcome {
   position: absolute;
   top: 0;
   left: 0;
@@ -151,7 +165,7 @@ header span {
   padding: 20px;
   background: #EAEEEE;
   box-shadow: 0 0 20px #DEE5E5;
-} */
+}
 
 
 

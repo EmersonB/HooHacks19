@@ -36,6 +36,7 @@ app.use(bodyParser.json())
 app.post('/api/:name', (req, res) => {
   console.log(req.body)
   const data = req.body
+
   db.collection(data.status)
     .doc(moment().valueOf().toString())
     .set(data)
