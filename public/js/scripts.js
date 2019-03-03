@@ -1,4 +1,4 @@
-const loopInterval = 5000
+const loopInterval = 30000
 const calcWindow = 30
 
 var config = {
@@ -430,7 +430,7 @@ function setupRadarChart () {
 function finalEval () {
   let total = _.sum(finalCount)
   let maxLeaning = finalCount.indexOf(_.max(finalCount))
-  $('#eval').text(order[maxLeaning])
+  $('#eval').text(order[maxLeaning] + ' leaning')
   $('#posture-demo').attr('src', 'img/' + order[maxLeaning] + '.png')
 
   $('#right').text((finalCount[4] / total).toFixed(2))
