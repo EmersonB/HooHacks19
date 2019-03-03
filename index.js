@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/:name', (req, res) => {
   const data = req.body.data
-  dataRef.doc(moment()).child(req.params.name).child('good').set(data).then(ref => {
+  dataRef.doc(moment()).child(req.params.name).child(data.status).set(data).then(ref => {
     res.json({ success: true, ref: ref.id })
   }).catch(err => {
     res.json({ success: false, error: err })
