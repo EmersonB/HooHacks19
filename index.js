@@ -1,7 +1,7 @@
 const admin = require('firebase-admin')
 const express = require('express')
 const path = require('path')
-// const moment = require('moment')
+const moment = require('moment')
 const bodyParser = require('body-parser')
 
 /**
@@ -33,14 +33,18 @@ app.use(bodyParser.json())
  * API
  */
 
-app.post('/api/readings/', (req, res) => {
+app.post('/api/:name', (req, res) => {
   console.log(req.body)
   const data = req.body
-  db.collection('data').add(data).then(ref => {
-    res.json({ success: true, ref: ref.id })
-  }).catch(err => {
-    res.json({ success: false, error: err })
-  })
+  db.collection('data')
+    .doc(data.status)
+    .doc(moment().unix())
+    .set(data)
+    .then(ref => {
+      res.json({ success: true, ref: ref.id })
+    }).catch(err => {
+      res.json({ success: false, error: err })
+    })
 })
 
 const server = app.listen(port, () => {
