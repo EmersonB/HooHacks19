@@ -6,8 +6,8 @@ body, html {
   background: #F6F7F7;
   color: #333D39;
   box-shadow:
-        inset 0px 150px 50px -150px #C5EADEBF,
-        inset 0px -150px 50px -150px rgba(0,0,0,.75);
+        inset 0px 100vh 50px -100vh #C5EADEBF,
+        inset 0px -100vh 50px -100vh rgba(0,0,0,.75);
 }
 
 h1, h2, h3, h4, h5, p {
@@ -111,7 +111,8 @@ header span {
 .graph-info {
   display: flex;
   justify-content: row;
-  box-shadow: 0 0 20px #DEE5E5A0;
+  box-shadow: 0 0 20px #DEE5E5A0,
+            1vh 1vh 1vh 0 #607D8B44;
   width: 600px;
 }
 
