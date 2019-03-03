@@ -1,11 +1,18 @@
-.header {
-    padding: 10px 16px;
-    background: rgb(9, 147, 189);
-
+body, html {
+    margin: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    font-family: 'Quicksand', sans-serif;
 }
 
-.sticky{
-    position: fixed;
-    top: 0;
-    width: 100%
+h1, h2, h3, h4, h5, p {
+    margin: 0;
+}
+
+header {
+    width: 100%;
+    padding: 
+}
+header span {
+    font-size: 1.5em;
 }

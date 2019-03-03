@@ -12,26 +12,27 @@
   <link rel="apple-touch-icon" href="icon.png">
   <!-- Place favicon.ico in the root directory -->
 
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyAGR4ionKdXWPFxJQTUKxBHsJ-5RGiMtFU",
-      authDomain: "stasis-aff23.firebaseapp.com",
-      databaseURL: "https://stasis-aff23.firebaseio.com",
-      projectId: "stasis",
-      storageBucket: "stasis.appspot.com",
-      messagingSenderId: "911680701800"
-    };
-    firebase.initializeApp(config);
-  </script>
+  <script src="js/scripts.js"></script>
 </head>
 
 <body>
-  <div class = "header">
-    <h1>Statera</h1>
+  <header>
+    <span>statera</span>
+  </header>
+  <div class="grid-container">
+    <div class="balance-container">
+
+    </div>
+    <div class="snapshot-container">
+    </div>
+  </div>
+  <div class="info-container">
+    
   </div>
   <div style="height: 50vh; width: 50vw;" class= "myChartdiv">
   	<canvas id="myChart" style="height: 100%; width: 100%;"></canvas>
