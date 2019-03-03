@@ -19,7 +19,7 @@ const db = admin.firestore()
  */
 
 const app = express()
-const port = 8080
+const port = process.env.PORT || 8080
 
 app.use(express.static(path.join(__dirname, '/public')))
 
@@ -36,9 +36,8 @@ app.use(bodyParser.json())
 app.post('/api/:name', (req, res) => {
   console.log(req.body)
   const data = req.body
-  db.collection('data')
-    .doc(data.status)
-    .doc(moment().unix())
+  db.collection(data.status)
+    .doc(moment().unix().toString())
     .set(data)
     .then(ref => {
       res.json({ success: true, ref: ref.id })
