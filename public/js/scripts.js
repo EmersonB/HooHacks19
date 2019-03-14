@@ -1,4 +1,4 @@
-const loopInterval = 30000
+const loopInterval = 3000
 const calcWindow = 30
 
 var config = {
@@ -153,41 +153,43 @@ function processData () {
           duration: 0
         }
       }
+      balChart.data.labels = balanceChartLabels
       balChart.data.datasets = [{
         data: balanceChartData,
         label: 'Balance Metric',
         borderColor: '#95D9C3',
         fill: false
       }]
-      comChart.data.datasets = [{
-        label: 'Scatter Dataset',
-        data: [{
-          x: 0.5,
-          y: 0
-        }],
-        pointRadius: 0,
-        pointHoverRadius: 20,
-        pointHitRadius: 20,
-        pointStyle: rightFoot
-      },
-      {
-        label: 'Scatter Dataset',
-        data: [{
-          x: -0.5,
-          y: 0
-        }],
-        pointRadius: 0,
-        pointHoverRadius: 20,
-        pointHitRadius: 20,
-        pointStyle: leftFoot
-      },
-      {
-        label: 'Center of Mass',
-        data: [{
-          x: coords[0],
-          y: coords[1]
+      comChart.data.datasets = [
+        {
+          label: 'Center of Mass',
+          data: [{
+            x: coords[0],
+            y: coords[1]
+          }]
+        },
+        {
+          label: 'Scatter Dataset',
+          data: [{
+            x: 0.5,
+            y: 0
+          }],
+          pointRadius: 0,
+          pointHoverRadius: 20,
+          pointHitRadius: 20,
+          pointStyle: rightFoot
+        },
+        {
+          label: 'Scatter Dataset',
+          data: [{
+            x: -0.5,
+            y: 0
+          }],
+          pointRadius: 0,
+          pointHoverRadius: 20,
+          pointHitRadius: 20,
+          pointStyle: leftFoot
         }]
-      }]
 
       radChart.data.datasets = [{
         label: 'My First dataset',
@@ -211,7 +213,7 @@ function getMlOutput () {
 
 function balanceChart () {
   for (var i = 0; i < endPoint - startPoint; i++) {
-    balanceChartLabels.push(moment(parseFloat(timestamps[i])).format('LTS'))
+    balanceChartLabels.push(moment(parseFloat(timestamps[startPoint+i])).format('LTS'))
     balanceChartData.push(mlOutput[i][3])
   }
 }
@@ -288,35 +290,36 @@ function setupCenterOfMassChart () {
   comChart = new Chart(ctx2, {
     type: 'scatter',
     data: {
-      datasets: [{
-        label: 'Scatter Dataset',
-        data: [{
-          x: 0.5,
-          y: 0
-        }],
-        pointRadius: 0,
-        pointHoverRadius: 20,
-        pointHitRadius: 20,
-        pointStyle: rightFoot
-      },
-      {
-        label: 'Scatter Dataset',
-        data: [{
-          x: -0.5,
-          y: 0
-        }],
-        pointRadius: 0,
-        pointHoverRadius: 20,
-        pointHitRadius: 20,
-        pointStyle: leftFoot
-      },
-      {
-        label: 'Center of Mass',
-        data: [{
-          x: coords[0],
-          y: coords[1]
+      datasets: [
+        {
+          label: 'Center of Mass',
+          data: [{
+            x: coords[0],
+            y: coords[1]
+          }]
+        },
+        {
+          label: 'Scatter Dataset',
+          data: [{
+            x: 0.5,
+            y: 0
+          }],
+          pointRadius: 0,
+          pointHoverRadius: 20,
+          pointHitRadius: 20,
+          pointStyle: rightFoot
+        },
+        {
+          label: 'Scatter Dataset',
+          data: [{
+            x: -0.5,
+            y: 0
+          }],
+          pointRadius: 0,
+          pointHoverRadius: 20,
+          pointHitRadius: 20,
+          pointStyle: leftFoot
         }]
-      }]
     },
     options: {
       maintainAspectRatio: false,
