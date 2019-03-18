@@ -3,7 +3,7 @@ const express = require('express')
 const path = require('path')
 const moment = require('moment')
 const bodyParser = require('body-parser')
-
+const favicon = require('express-favicon');
 /**
  * Firebase
  */
@@ -20,6 +20,8 @@ const db = admin.firestore()
 
 const app = express()
 const port = process.env.PORT || 8080
+
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(express.static(path.join(__dirname, '/public')))
 
