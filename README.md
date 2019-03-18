@@ -1,4 +1,3 @@
 # Statera
 
 Balance app
-test
