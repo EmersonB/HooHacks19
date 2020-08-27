@@ -1,2 +1,4 @@
 node_modules/
 .vscode/
+your-firestore-key.json
+firebase-export.json
